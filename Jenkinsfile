@@ -1,12 +1,15 @@
 #!groovy
+latest = "1.15.0-alpha.3"
+stable = "1.14.1"
+
 properties([
   parameters([
-    string(defaultValue: '1.11.10', description: 'Kubectl Version', name: 'KubectlVersion')
+    string(defaultValue: '1.14.1', description: 'Version', name: 'Version')
   ])
 ])
 
 node {
-  kubectlVersion = params.KubectlVersion
+  kubectlVersion = params.Version
   credentialsId = 'docker-hub-credentials'
 
   stage('clone') {
@@ -26,6 +29,10 @@ node {
   stage('publish') {
     docker.withRegistry("", credentialsId) {
       image.push()
+      if (kubectlVersion == latest)
+        image.push('latest')
+      else if (kubectlVersion == stable)
+        image.push('stable')
     }
   }
 }
