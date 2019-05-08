@@ -31,7 +31,7 @@ node {
       image.push()
       if (kubectlVersion == latest)
         image.push('latest')
-      else if (kubectlVersion == stable)
+      if (kubectlVersion == stable)
         image.push('stable')
     }
   }
